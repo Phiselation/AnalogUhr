@@ -12,9 +12,10 @@ namespace AnalogUhr_Sellen
         private Point mptMittelpunkt;
         private int miRadius;
 
-        public UhrBasis(Point Mittelpunkt, int Radius)
+        public UhrBasis(Point pMittelpunkt, int iRadius)
         {
-
+            mptMittelpunkt = pMittelpunkt;
+            miRadius = iRadius;
         }
         public Point Mittelpunkt
         {

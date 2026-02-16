@@ -20,19 +20,20 @@ namespace AnalogUhr_Sellen
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Ziffernblatt NewUhr;
         public MainWindow()
         {
             InitializeComponent();
-
+            
             NewUhr = new Ziffernblatt(
-                new Point(150, 150), // Mittelpunkt der Uhr
-                140,                 // Radius der Uhr
-                Colors.Black,        // Kreisfarbe
+                new Point((UhrCanvas.ActualWidth/2), (UhrCanvas.ActualHeight/2)), // Mittelpunkt der Uhr
+                Convert.ToInt32(UhrCanvas.ActualWidth/2),                 // Radius der Uhr
+                Brushes.Black,        // Kreisfarbe
                 3,                   // Kreisdicke
-                Colors.Black,        // Strichfarbe
+                Brushes.Black,        // Strichfarbe
                 2                    // Strichdicke
             );
-            NewUhr.Draw(UhrCanvas);
+            NewUhr.Zeichne(UhrCanvas);
         }
     }
 }

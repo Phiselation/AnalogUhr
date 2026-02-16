@@ -23,7 +23,16 @@ namespace AnalogUhr_Sellen
         public MainWindow()
         {
             InitializeComponent();
-        }
 
+            NewUhr = new Ziffernblatt(
+                new Point(150, 150), // Mittelpunkt der Uhr
+                140,                 // Radius der Uhr
+                Colors.Black,        // Kreisfarbe
+                3,                   // Kreisdicke
+                Colors.Black,        // Strichfarbe
+                2                    // Strichdicke
+            );
+            NewUhr.Draw(UhrCanvas);
+        }
     }
 }

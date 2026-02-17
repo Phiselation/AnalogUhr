@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.
 
 namespace AnalogUhr_Sellen
 {
@@ -49,7 +50,7 @@ namespace AnalogUhr_Sellen
 
         private void updateTime(DateTime SystemTime)
         {
-
+            
         }
     }
 }

@@ -19,20 +19,20 @@ namespace AnalogUhr_Sellen
         private int mRadius;
         private Brush mKreisfarbe;
         private int mKreisdicke;
-        private Brush mWeiserfarbe;
-        private int mWeiserdicke;
+        private Brush mZeitstrichfarbe;
+        private int mZeitstrichdicke;
 
         public Ziffernblatt(Point Mittelpunkt, int Radius,
                             Brush Kreisfarbe, int Kreisdicke,
-                            Brush WeiserFarbe, int WeiserDicke)
+                            Brush ZeitstrichFarbe, int Zeitstriche)
             : base(Mittelpunkt, Radius)
         {
             mMittelpunkt = Mittelpunkt;
             mRadius = Radius;
             mKreisfarbe = Kreisfarbe;
             mKreisdicke = Kreisdicke;
-            mWeiserfarbe = WeiserFarbe;
-            mWeiserdicke = WeiserDicke;
+            mZeitstrichfarbe = ZeitstrichFarbe;
+            mZeitstrichdicke = Zeitstriche;
         }
         public void Zeichne(Canvas canvas)
         {

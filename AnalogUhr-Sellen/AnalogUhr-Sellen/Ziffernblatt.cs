@@ -69,6 +69,49 @@ namespace AnalogUhr_Sellen
         }
         private void ZeichneZeitstriche(Canvas canvas)
         {
+            for (int i = 0; i < 60; i++)
+            {
+                double winkel = i * 6 - 90; // 6 Grad pro Minute, -90 für Start oben
+                double winkelRad = winkel * Math.PI / 180;
+
+                // Unterschiedliche Längen für Stunden (15 Min) und 5-Minuten-Marken
+                double laenge;
+                double dicke;
+
+                if (i % 15 == 0) // Stunden-Marken
+                {
+                    laenge = Radius * 0.15;
+                    dicke = mStrichDicke * 2;
+                }
+                else if (i % 5 == 0) // 5-Minuten-Marken
+                {
+                    laenge = Radius * 0.1;
+                    dicke = mStrichDicke * 1.5;
+                }
+                else // Minuten-Marken
+                {
+                    laenge = Radius * 0.05;
+                    dicke = mStrichDicke;
+                }
+
+                // Start- und Endpunkt des Strichs berechnen
+                double startX = Mittelpunkt.X + (Radius - laenge) * Math.Cos(winkelRad);
+                double startY = Mittelpunkt.Y + (Radius - laenge) * Math.Sin(winkelRad);
+                double endX = Mittelpunkt.X + Radius * Math.Cos(winkelRad);
+                double endY = Mittelpunkt.Y + Radius * Math.Sin(winkelRad);
+
+                Line strich = new Line
+                {
+                    X1 = startX,
+                    Y1 = startY,
+                    X2 = endX,
+                    Y2 = endY,
+                    Stroke = mStrichFarbe,
+                    StrokeThickness = dicke
+                };
+
+                canvas.Children.Add(strich);
+            }
         }
         private void ZeichneZiffern(Canvas canvas)
         {

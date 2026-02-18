@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace AnalogUhr_Sellen
 {
-    class Uhr : UhrBasis
+    class Uhr
     {
         private Ziffernblatt mNeueUhr;
         private Pen mPen;
@@ -18,35 +18,58 @@ namespace AnalogUhr_Sellen
         private Zeiger mSekunde;
         private Zeiger mMinute;
         private Zeiger mStunde;
+        private Point mptMittelpunkt;
+        private int miRadius;
+
+        private DrawingGroup mAnalogUhrGruppe = new DrawingGroup();
+        public Image UhrImage { get; private set; }
 
         public Uhr(Point pMitte, int durchmesser)
-            : base(pMitte, durchmesser / 2)
         {
+            mptMittelpunkt = pMitte;
+            miRadius = durchmesser / 2;
             ZeichneUhrenteile();
         }
         private void ZeichneUhrenteile()
         {
             mNeueUhr = new Ziffernblatt(
-                Mittelpunkt,
-                Radius,
+                mptMittelpunkt,
+                miRadius,
                 Brushes.Black,       // Kreis-Farbe
                 3,                  // Kreis-Dicke
                 Brushes.Black,       // Strich-Farbe
                 2                   // Strich-Dicke
             );
         }
-        public void AnalogUhr(Point ptMitte, int iDM)
-        {
-
-        }
 
         public void ZeichneUhr(Canvas canvas)
         {
-            mNeueUhr.Mittelpunkt = Mittelpunkt;
-            mNeueUhr.Radius = Radius;
-            mNeueUhr.Zeichne(canvas);
+            mNeueUhr.Mittelpunkt = mptMittelpunkt;
+            mNeueUhr.Radius = miRadius;
+            mNeueUhr.ZeichneKreis(canvas);
         }
-
+        private void CreateGroup()
+        {
+            
+        }
+        public Image CreateImage()
+        {
+            CreateGroup();
+            DrawingImage drawingImage = new DrawingImage(mAnalogUhrGruppe);
+            UhrImage = new Image
+            {
+                Source = drawingImage,
+                Width = miRadius * 2,
+                Height = miRadius * 2
+            };
+            TranslateTransform uhrMid = new TranslateTransform
+            {
+                X = -drawingImage.Width / 2,
+                Y = -drawingImage.Height / 2
+            };
+            UhrImage.RenderTransform = uhrMid;
+            return UhrImage;
+        }
         private void updateTime(DateTime SystemTime)
         {
             

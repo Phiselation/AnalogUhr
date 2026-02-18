@@ -16,7 +16,7 @@ namespace AnalogUhr_Sellen
         public Zeiger(Point Mittelpunkt, int Radius, int Länge, Pen ZeigerPen)
             : base(Mittelpunkt, Radius)
         {
-
+            
         }
         public void Set(int iWinkel)
         {

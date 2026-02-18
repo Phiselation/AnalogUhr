@@ -71,44 +71,45 @@ namespace AnalogUhr_Sellen
         {
             for (int i = 0; i < 60; i++)
             {
-                double winkel = i * 6 - 90; // 6 Grad pro Minute, -90 für Start oben
-                double winkelRad = winkel * Math.PI / 180;
+                double angle = i * 6.0; // 6° pro Minute, 0° = 12 Uhr (Linie zeigt nach oben)
 
-                // Unterschiedliche Längen für Stunden (15 Min) und 5-Minuten-Marken
                 double laenge;
                 double dicke;
 
-                if (i % 15 == 0) // Stunden-Marken
+                if (i % 15 == 0) // Stunden-Marken (jede Viertelstunde)
                 {
                     laenge = Radius * 0.15;
-                    dicke = mStrichDicke * 2;
+                    dicke = mZeitstrichdicke * 2;
                 }
                 else if (i % 5 == 0) // 5-Minuten-Marken
                 {
                     laenge = Radius * 0.1;
-                    dicke = mStrichDicke * 1.5;
+                    dicke = mZeitstrichdicke * 1.5;
                 }
                 else // Minuten-Marken
                 {
                     laenge = Radius * 0.05;
-                    dicke = mStrichDicke;
+                    dicke = mZeitstrichdicke;
                 }
 
-                // Start- und Endpunkt des Strichs berechnen
-                double startX = Mittelpunkt.X + (Radius - laenge) * Math.Cos(winkelRad);
-                double startY = Mittelpunkt.Y + (Radius - laenge) * Math.Sin(winkelRad);
-                double endX = Mittelpunkt.X + Radius * Math.Cos(winkelRad);
-                double endY = Mittelpunkt.Y + Radius * Math.Sin(winkelRad);
-
+                // Linie am Ursprung: von y = -Radius (außerer Kreis) nach innen um "laenge"
                 Line strich = new Line
                 {
-                    X1 = startX,
-                    Y1 = startY,
-                    X2 = endX,
-                    Y2 = endY,
-                    Stroke = mStrichFarbe,
-                    StrokeThickness = dicke
+                    X1 = 0,
+                    Y1 = -Radius,
+                    X2 = 0,
+                    Y2 = -(Radius - laenge),
+                    Stroke = mZeitstrichfarbe,
+                    StrokeThickness = dicke,
+                    StrokeStartLineCap = PenLineCap.Round,
+                    StrokeEndLineCap = PenLineCap.Round
                 };
+
+                // Zuerst rotieren (um Ursprung), dann zum Mittelpunkt verschieben
+                var transforms = new TransformGroup();
+                transforms.Children.Add(new RotateTransform(angle)); // dreht um (0,0)
+                transforms.Children.Add(new TranslateTransform(Mittelpunkt.X, Mittelpunkt.Y)); // verschiebt Ursprung zur Mitte
+                strich.RenderTransform = transforms;
 
                 canvas.Children.Add(strich);
             }

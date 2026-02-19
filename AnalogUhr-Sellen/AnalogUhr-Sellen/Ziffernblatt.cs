@@ -13,7 +13,7 @@ namespace AnalogUhr_Sellen
     class Ziffernblatt : UhrBasis
     {
         private Pen mPen;
-        private Rectangle mZeitstrich;
+        private RectangleGeometry mZeitstrich;
         private EllipseGeometry ZiffernblattDrawing;
         private Point mMittelpunkt;
         private int mRadius;
@@ -22,20 +22,29 @@ namespace AnalogUhr_Sellen
         private Brush mZeitstrichfarbe;
         private int mZeitstrichdicke;
 
-        protected GeometryGroup ggZiffernblatt;
-        protected GeometryDrawing gdZiffernblatt;
+        private GeometryGroup ggZiffernblatt;
+        private GeometryGroup ggZeitstriche;
+        private GeometryDrawing gdMittelpunkt;
+        private GeometryDrawing gdZiffernblatt;
+        private GeometryDrawing gdZeitstrich;
 
-        public GeometryDrawing VollstaendigesZiffernblatt { get; private set; }
+        public DrawingGroup VollstaendigesZiffernblatt { get; private set; }
 
         public Ziffernblatt(Point Mittelpunkt, int Radius,
                             Brush Kreisfarbe, int Kreisdicke,
                             Brush ZeitstrichFarbe, int Zeitstriche)
             : base(Mittelpunkt, Radius)
         {
+            mMittelpunkt = Mittelpunkt;
             mKreisfarbe = Kreisfarbe;
             mKreisdicke = Kreisdicke;
+            mRadius = Radius;
             mPen = new Pen(mKreisfarbe, mKreisdicke);
             mZeitstrichfarbe = ZeitstrichFarbe;
+            ggZiffernblatt = new GeometryGroup();
+            ggZeitstriche = new GeometryGroup();
+            VollstaendigesZiffernblatt = new DrawingGroup();
+            mZeitstrichdicke = Zeitstriche;
         }
         public void ZeichneKreis()
         {
@@ -43,12 +52,10 @@ namespace AnalogUhr_Sellen
             ZiffernblattDrawing = new EllipseGeometry
             {
                 Center = mMittelpunkt,
-                RadiusX = mRadius * 2,
-                RadiusY = mRadius * 2,
+                RadiusX = mRadius,
+                RadiusY = mRadius,
             };
 
-            //Canvas.SetLeft(ZiffernblattDrawing, mMittelpunkt.X - mRadius);
-            //Canvas.SetTop(ZiffernblattDrawing, mMittelpunkt.Y - mRadius);
             ggZiffernblatt.Children.Add(ZiffernblattDrawing);
 
             gdZiffernblatt = new GeometryDrawing
@@ -67,19 +74,35 @@ namespace AnalogUhr_Sellen
             // Mittelpunkt-Punkt
             EllipseGeometry mittelpunktKreis = new EllipseGeometry
             {
-                RadiusX = 10,
-                RadiusY = 10,
+                Center = mMittelpunkt,
+                RadiusX = mRadius * 0.05,
+                RadiusY = mRadius * 0.05,
             };
-            //Canvas.SetLeft(mittelpunktKreis, mMittelpunkt.X - 5);
-            //Canvas.SetTop(mittelpunktKreis, mMittelpunkt.Y - 5);
+
             ggZiffernblatt.Children.Add(mittelpunktKreis);
-            gdZiffernblatt = new GeometryDrawing
+            gdMittelpunkt = new GeometryDrawing
             {
                 Geometry = mittelpunktKreis,
                 Brush = Brushes.Black
             };
 
-            VollstaendigesZiffernblatt = gdZiffernblatt;
+            if (ggZeitstriche.Children.Count > 0)
+            {
+                gdZeitstrich = new GeometryDrawing
+                {
+                    Geometry = ggZeitstriche,
+                    Brush = mZeitstrichfarbe
+                };
+            }
+            else
+            {
+                gdZeitstrich = null;
+            }
+
+            VollstaendigesZiffernblatt.Children.Clear();
+            VollstaendigesZiffernblatt.Children.Add(gdZiffernblatt);
+            VollstaendigesZiffernblatt.Children.Add(gdZeitstrich);
+            VollstaendigesZiffernblatt.Children.Add(gdMittelpunkt);
         }
         private void ZeichneZeitstriche()
         {
@@ -106,32 +129,22 @@ namespace AnalogUhr_Sellen
                     dicke = mZeitstrichdicke;
                 }
 
-                mZeitstrich = new Rectangle
-                {
-                    Width = dicke,
-                    Height = laenge,
-                    Fill = mZeitstrichfarbe,
-                    StrokeThickness = 0
-                };
+                mZeitstrich = new RectangleGeometry(new Rect(-dicke / 2.0, -mRadius, dicke, laenge));
 
                 TransformGroup transforms = new TransformGroup();
-                transforms.Children.Add(new TranslateTransform(-dicke / 2.0, -mRadius)); // obere Mitte -> (0,0)
-                transforms.Children.Add(new RotateTransform(angle));                     // Drehung um (0,0)
-                transforms.Children.Add(new TranslateTransform(mMittelpunkt.X, mMittelpunkt.Y)); // verschieben zur Mitte
+                transforms.Children.Add(new RotateTransform(angle));
+                transforms.Children.Add(new TranslateTransform(mMittelpunkt.X, mMittelpunkt.Y));
 
-                mZeitstrich.RenderTransform = transforms;
+                mZeitstrich.Transform = transforms;
 
-                // Canvas-Position kann 0,0 bleiben, Transform macht die Platzierung
-                Canvas.SetLeft(mZeitstrich, 0);
-                Canvas.SetTop(mZeitstrich, 0);
+                //gdZeitstrich = new GeometryDrawing
+                //{
+                //    Geometry = mZeitstrich,
+                //    Pen = new Pen(mZeitstrichfarbe, 0), // Keine Umrandung
+                //};
 
-                ggZiffernblatt.Children.Add(mZeitstrich);
+                ggZeitstriche.Children.Add(mZeitstrich);
             }
-        }
-        public void ZeichneZiggernblatt()        
-        {
-            ZeichneKreis();
-            ZeichenZeitstriche();
         }
         private void ZeichneZiffern()
         {

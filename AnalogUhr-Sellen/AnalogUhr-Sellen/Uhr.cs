@@ -13,6 +13,7 @@ namespace AnalogUhr_Sellen
     class Uhr
     {
         private Ziffernblatt mNeueUhr;
+        private Zeiger mUhrZeiger;
         private Pen mPen;
         private Rectangle mRectangle;
         private Zeiger mSekunde;
@@ -28,12 +29,12 @@ namespace AnalogUhr_Sellen
         {
             mptMittelpunkt = pMitte;
             miRadius = durchmesser / 2;
-            ZeichneUhrenteile();
+            Uhrenwerte();
         }
-        private void ZeichneUhrenteile()
+        private void Uhrenwerte()
         {
             mNeueUhr = new Ziffernblatt(
-                mptMittelpunkt,
+                new Point(miRadius,miRadius),
                 miRadius,
                 Brushes.Black,       // Kreis-Farbe
                 3,                  // Kreis-Dicke
@@ -41,26 +42,31 @@ namespace AnalogUhr_Sellen
                 2                   // Strich-Dicke
             );
         }
-
-        public void ZeichneUhr(Canvas canvas)
+        public void ZeichneUhr()
         {
-            mNeueUhr.Mittelpunkt = mptMittelpunkt;
-            mNeueUhr.Radius = miRadius;
-            mNeueUhr.ZeichneKreis(canvas);
-        }
-        private void CreateGroup()
-        {
-            
+            mNeueUhr.ZeichneKreis();
+            //mUhrZeiger = new Zeiger(
+            //    new Point(miRadius, miRadius),
+            //    miRadius,
+            //    50,                 // Länge in %
+            //    Brushes.Black,
+            //    6                   // Dicke
+            //);
+            mAnalogUhrGruppe.Children.Add(mNeueUhr.VollstaendigesZiffernblatt);
+            //mNeueUhr.Mittelpunkt = mptMittelpunkt;
+            //mNeueUhr.Radius = miRadius;
+            //mNeueUhr.ZeichneKreis(canvas);
         }
         public Image CreateImage()
         {
-            CreateGroup();
+            ZeichneUhr();
             DrawingImage drawingImage = new DrawingImage(mAnalogUhrGruppe);
             UhrImage = new Image
             {
                 Source = drawingImage,
-                Width = miRadius * 2,
-                Height = miRadius * 2
+                //Width = miRadius * 2,
+                //Height = miRadius * 2
+                Stretch = Stretch.None
             };
             TranslateTransform uhrMid = new TranslateTransform
             {

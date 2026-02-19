@@ -53,7 +53,12 @@ namespace AnalogUhr_Sellen
 
             NewUhr = new Uhr(mitte, (int)durchmesser);
 
-            NewUhr.ZeichneUhr(UhrCanvas);
+            Image AnalogUhr = NewUhr.CreateImage();
+
+            Canvas.SetLeft(AnalogUhr, mitte.X);
+            Canvas.SetTop(AnalogUhr, mitte.Y);
+
+            UhrCanvas.Children.Add(AnalogUhr);
         }
     }
 }

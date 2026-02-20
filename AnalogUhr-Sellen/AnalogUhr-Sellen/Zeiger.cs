@@ -11,36 +11,59 @@ namespace AnalogUhr_Sellen
     class Zeiger : UhrBasis
     {
         private int mLänge;
+        private double mZeigerWinkel;
         private Pen mZeigerPen;
         private LineGeometry UhrZeiger;
+        private GeometryGroup ggZeiger;
+        private GeometryDrawing gdZeiger;
+        private DrawingGroup dgZeiger;
+        private RotateTransform rtZeiger;
         public int Länge
         {
             get { return mLänge; }
             set { mLänge = value; }
         }
-        public Zeiger(Point Mittelpunkt, int Radius, int Länge, Pen ZeigerPen)
+        public Zeiger(Point Mittelpunkt, double Radius, int Länge, Pen ZeigerPen)
             : base(Mittelpunkt, Radius)
         {
             mLänge = Länge;
+            mZeigerWinkel = Radius;
             mZeigerPen = ZeigerPen;
         }
-        public void CreateZeiger()
+        public DrawingGroup CreateZeiger()
         {
             UhrZeiger = new LineGeometry
             {
-                
+                StartPoint = Mittelpunkt,
+                EndPoint = new Point(Mittelpunkt.X, Mittelpunkt.Y - (Radius * mLänge / 100))
             };
-        }
-        public void Set(int iWinkel)
-        {
-            if(UhrZeiger != null)
+            ggZeiger = new GeometryGroup();
+
+            ggZeiger.Children.Add(UhrZeiger);
+
+            gdZeiger = new GeometryDrawing
             {
-                
-            }
+                Geometry = ggZeiger,
+                Pen = mZeigerPen
+            };
+            dgZeiger = new DrawingGroup();
+
+            dgZeiger.Children.Add(gdZeiger);
+
+            rtZeiger = new RotateTransform
+            {
+                Angle = mZeigerWinkel,
+                CenterX = mZeigerWinkel,
+                CenterY = mZeigerWinkel
+            };
+
+            dgZeiger.Transform = rtZeiger;
+
+            return dgZeiger;
         }
-        public void PositionsUpdate(int iWinkel)
+        public void Set(double iWinkel)
         {
-            Set(iWinkel);
+            mZeigerWinkel = iWinkel;
         }
     }
 }

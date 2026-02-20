@@ -10,9 +10,9 @@ namespace AnalogUhr_Sellen
     class UhrBasis
     {
         private Point mptMittelpunkt;
-        private int miRadius;
+        private double miRadius;
 
-        public UhrBasis(Point pMittelpunkt, int iRadius)
+        public UhrBasis(Point pMittelpunkt, double iRadius)
         {
             mptMittelpunkt = pMittelpunkt;
             miRadius = iRadius;
@@ -22,7 +22,7 @@ namespace AnalogUhr_Sellen
             get { return mptMittelpunkt; }
             set { mptMittelpunkt = value; }
         }
-        public int Radius
+        public double Radius
         {
             get { return miRadius; }
             set { miRadius = value; }

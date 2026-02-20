@@ -137,12 +137,6 @@ namespace AnalogUhr_Sellen
 
                 mZeitstrich.Transform = transforms;
 
-                //gdZeitstrich = new GeometryDrawing
-                //{
-                //    Geometry = mZeitstrich,
-                //    Pen = new Pen(mZeitstrichfarbe, 0), // Keine Umrandung
-                //};
-
                 ggZeitstriche.Children.Add(mZeitstrich);
             }
         }

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace AnalogUhr_Sellen
 {
@@ -21,6 +22,7 @@ namespace AnalogUhr_Sellen
         private Zeiger mStunde;
         private Point mptMittelpunkt;
         private int miRadius;
+        private DispatcherTimer mTimer;
 
         private DrawingGroup mAnalogUhrGruppe = new DrawingGroup();
         public Image UhrImage { get; private set; }
@@ -30,6 +32,12 @@ namespace AnalogUhr_Sellen
             mptMittelpunkt = pMitte;
             miRadius = durchmesser / 2;
             Uhrenwerte();
+            Dispatcher uiDispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+            mTimer = new DispatcherTimer (TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, new EventHandler(mTimer_Tick), uiDispatcher);
+        }
+        private void mTimer_Tick(object sender, EventArgs e)
+        {
+            updateTime();
         }
         private void Uhrenwerte()
         {
@@ -41,31 +49,24 @@ namespace AnalogUhr_Sellen
                 Brushes.Black,       // Strich-Farbe
                 2                   // Strich-Dicke
             );
+            mSekunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius / 1.25), new Pen(new SolidColorBrush(Colors.Black), 2));
+            mMinute = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius / 1.25), new Pen(new SolidColorBrush(Colors.Black), 2));
+            mStunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius / 1.25), new Pen(new SolidColorBrush(Colors.Black), 2));
         }
         public void ZeichneUhr()
         {
             mNeueUhr.ZeichneKreis();
-            //mUhrZeiger = new Zeiger(
-            //    new Point(miRadius, miRadius),
-            //    miRadius,
-            //    50,                 // Länge in %
-            //    Brushes.Black,
-            //    6                   // Dicke
-            //);
             mAnalogUhrGruppe.Children.Add(mNeueUhr.VollstaendigesZiffernblatt);
-            //mNeueUhr.Mittelpunkt = mptMittelpunkt;
-            //mNeueUhr.Radius = miRadius;
-            //mNeueUhr.ZeichneKreis(canvas);
+            
         }
         public Image CreateImage()
         {
             ZeichneUhr();
+            updateTime();
             DrawingImage drawingImage = new DrawingImage(mAnalogUhrGruppe);
             UhrImage = new Image
             {
                 Source = drawingImage,
-                //Width = miRadius * 2,
-                //Height = miRadius * 2
                 Stretch = Stretch.None
             };
             TranslateTransform uhrMid = new TranslateTransform
@@ -76,9 +77,37 @@ namespace AnalogUhr_Sellen
             UhrImage.RenderTransform = uhrMid;
             return UhrImage;
         }
-        private void updateTime(DateTime SystemTime)
+        private void updateTime()
         {
-            
+            double sekundenWinkel = DateTime.Now.Second * DateTime.Now.Millisecond / 1000;
+            double minutenWinkel = DateTime.Now.Minute + sekundenWinkel / 60;
+            double stundenWinkel = (DateTime.Now.Hour % 12) + minutenWinkel / 60;
+
+            mAnalogUhrGruppe.Children.Clear();
+            mAnalogUhrGruppe.Children.Add(mNeueUhr.VollstaendigesZiffernblatt);
+
+            double sekundenGrad = sekundenWinkel * 6; // 360° / 60 Sekunden
+            double minutenGrad = minutenWinkel * 6; // 360° / 60 Minuten
+            double stundenGrad = stundenWinkel * 30; // 360° / 12 Stunden
+
+            mSekunde.Set(sekundenGrad);
+            mMinute.Set(minutenGrad);
+            mStunde.Set(stundenGrad);
+
+            mAnalogUhrGruppe.Children.Add(mSekunde.CreateZeiger());
+            mAnalogUhrGruppe.Children.Add(mMinute.CreateZeiger());
+            mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger());
+
+            mAnalogUhrGruppe.Children.Add(new GeometryDrawing
+            {
+                Geometry = new EllipseGeometry
+                {
+                    Center = mptMittelpunkt,
+                    RadiusX = miRadius * 0.05,
+                    RadiusY = miRadius * 0.05,
+                },
+                Brush = Brushes.Black
+            });
         }
     }
 }

@@ -18,6 +18,7 @@ namespace AnalogUhr_Sellen
         private GeometryDrawing gdZeiger;
         private DrawingGroup dgZeiger;
         private RotateTransform rtZeiger;
+        private Point mptMittelpunkt;
         public int Länge
         {
             get { return mLänge; }
@@ -29,13 +30,14 @@ namespace AnalogUhr_Sellen
             mLänge = Länge;
             mZeigerWinkel = 0;
             mZeigerPen = ZeigerPen;
+            mptMittelpunkt = Mittelpunkt;
         }
         public DrawingGroup CreateZeiger()
         {
             UhrZeiger = new LineGeometry
             {
-                StartPoint = Mittelpunkt,
-                EndPoint = new Point(Mittelpunkt.X, Mittelpunkt.Y - (Radius * mLänge / 100))
+                StartPoint = mptMittelpunkt,
+                EndPoint = new Point(mptMittelpunkt.X, mptMittelpunkt.Y - (Radius * mLänge / 100))
             };
             ggZeiger = new GeometryGroup();
 
@@ -53,8 +55,8 @@ namespace AnalogUhr_Sellen
             rtZeiger = new RotateTransform
             {
                 Angle = mZeigerWinkel,
-                CenterX = Mittelpunkt.X,
-                CenterY = Mittelpunkt.Y
+                CenterX = mptMittelpunkt.X,
+                CenterY = mptMittelpunkt.Y
             };
 
             dgZeiger.Transform = rtZeiger;

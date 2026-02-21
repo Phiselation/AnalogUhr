@@ -49,10 +49,12 @@ namespace AnalogUhr_Sellen
                 Brushes.Black,       // Strich-Farbe
                 2                   // Strich-Dicke
             );
-            mSekunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius * 0.75), new Pen(new SolidColorBrush(Colors.Black), 2));
-            mMinute = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius * 0.6), new Pen(new SolidColorBrush(Colors.Red), 2));
-            mStunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius * 0.5), new Pen(new SolidColorBrush(Colors.Blue), 2));
+            Point lokalMittelpunkt = new Point(miRadius, miRadius);
+            mSekunde = new Zeiger(lokalMittelpunkt, miRadius, (int)(miRadius * 0.5), new Pen(new SolidColorBrush(Colors.Black), 2));
+            mMinute = new Zeiger(lokalMittelpunkt, miRadius, (int)(miRadius * 0.35), new Pen(new SolidColorBrush(Colors.Red), 2));
+            mStunde = new Zeiger(lokalMittelpunkt, miRadius, (int)(miRadius * 0.2), new Pen(new SolidColorBrush(Colors.Blue), 2));
         }
+
         public void ZeichneUhr()
         {
             mNeueUhr.ZeichneKreis();
@@ -79,7 +81,7 @@ namespace AnalogUhr_Sellen
         }
         private void updateTime()
         {
-            double sekundenWinkel = DateTime.Now.Second * DateTime.Now.Millisecond / 1000;
+            double sekundenWinkel = DateTime.Now.Second + DateTime.Now.Millisecond / 1000;
             double minutenWinkel = DateTime.Now.Minute + sekundenWinkel / 60;
             double stundenWinkel = (DateTime.Now.Hour % 12) + minutenWinkel / 60;
 

@@ -49,9 +49,9 @@ namespace AnalogUhr_Sellen
                 Brushes.Black,       // Strich-Farbe
                 2                   // Strich-Dicke
             );
-            mSekunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius / 1.25), new Pen(new SolidColorBrush(Colors.Black), 2));
-            mMinute = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius / 1.25), new Pen(new SolidColorBrush(Colors.Black), 2));
-            mStunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius / 1.25), new Pen(new SolidColorBrush(Colors.Black), 2));
+            mSekunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius * 0.75), new Pen(new SolidColorBrush(Colors.Black), 2));
+            mMinute = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius * 0.6), new Pen(new SolidColorBrush(Colors.Red), 2));
+            mStunde = new Zeiger(mptMittelpunkt, miRadius, (int)(miRadius * 0.5), new Pen(new SolidColorBrush(Colors.Blue), 2));
         }
         public void ZeichneUhr()
         {
@@ -98,16 +98,16 @@ namespace AnalogUhr_Sellen
             mAnalogUhrGruppe.Children.Add(mMinute.CreateZeiger());
             mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger());
 
-            mAnalogUhrGruppe.Children.Add(new GeometryDrawing
-            {
-                Geometry = new EllipseGeometry
-                {
-                    Center = mptMittelpunkt,
-                    RadiusX = miRadius * 0.05,
-                    RadiusY = miRadius * 0.05,
-                },
-                Brush = Brushes.Black
-            });
+            //mAnalogUhrGruppe.Children.Add(new GeometryDrawing
+            //{
+            //    Geometry = new EllipseGeometry
+            //    {
+            //        Center = mptMittelpunkt,
+            //        RadiusX = miRadius * 0.05,
+            //        RadiusY = miRadius * 0.05,
+            //    },
+            //    Brush = Brushes.Black
+            //});
         }
     }
 }

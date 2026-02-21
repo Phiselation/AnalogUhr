@@ -27,7 +27,7 @@ namespace AnalogUhr_Sellen
             : base(Mittelpunkt, Radius)
         {
             mLänge = Länge;
-            mZeigerWinkel = Radius;
+            mZeigerWinkel = 0;
             mZeigerPen = ZeigerPen;
         }
         public DrawingGroup CreateZeiger()
@@ -53,8 +53,8 @@ namespace AnalogUhr_Sellen
             rtZeiger = new RotateTransform
             {
                 Angle = mZeigerWinkel,
-                CenterX = mZeigerWinkel,
-                CenterY = mZeigerWinkel
+                CenterX = Mittelpunkt.X,
+                CenterY = Mittelpunkt.Y
             };
 
             dgZeiger.Transform = rtZeiger;
@@ -63,7 +63,12 @@ namespace AnalogUhr_Sellen
         }
         public void Set(double iWinkel)
         {
+            //mZeigerWinkel = iWinkel;
             mZeigerWinkel = iWinkel;
+            if (rtZeiger != null)
+            {
+                rtZeiger.Angle = mZeigerWinkel; // transform sofort aktualisieren, wenn vorhanden
+            }
         }
     }
 }

@@ -14,9 +14,6 @@ namespace AnalogUhr_Sellen
     class Uhr
     {
         private Ziffernblatt mNeueUhr;
-        private Zeiger mUhrZeiger;
-        private Pen mPen;
-        private Rectangle mRectangle;
         private Zeiger mSekunde;
         private Zeiger mMinute;
         private Zeiger mStunde;
@@ -33,7 +30,8 @@ namespace AnalogUhr_Sellen
             miRadius = durchmesser / 2;
             Uhrenwerte();
             Dispatcher uiDispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
-            mTimer = new DispatcherTimer (TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, new EventHandler(mTimer_Tick), uiDispatcher);
+            mTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, new EventHandler(mTimer_Tick), uiDispatcher);
+            mTimer.Start();
         }
         private void mTimer_Tick(object sender, EventArgs e)
         {
@@ -50,21 +48,36 @@ namespace AnalogUhr_Sellen
                 2                   // Strich-Dicke
             );
             Point lokalMittelpunkt = new Point(miRadius, miRadius);
-            mSekunde = new Zeiger(lokalMittelpunkt, miRadius, (int)(miRadius * 0.5), new Pen(new SolidColorBrush(Colors.Black), 2));
-            mMinute = new Zeiger(lokalMittelpunkt, miRadius, (int)(miRadius * 0.35), new Pen(new SolidColorBrush(Colors.Red), 2));
-            mStunde = new Zeiger(lokalMittelpunkt, miRadius, (int)(miRadius * 0.2), new Pen(new SolidColorBrush(Colors.Blue), 2));
+            mSekunde = new Zeiger(
+                lokalMittelpunkt, 
+                miRadius, 
+                (int)(miRadius * 0.75), 
+                new Pen(new SolidColorBrush(Colors.Black), 2)
+            );
+            mMinute = new Zeiger(
+                lokalMittelpunkt, 
+                miRadius, 
+                (int)(miRadius * 0.6), 
+                new Pen(new SolidColorBrush(Colors.Red), 4)
+            );
+            mStunde = new Zeiger(
+                lokalMittelpunkt, 
+                miRadius, 
+                (int)(miRadius * 0.5), 
+                new Pen(new SolidColorBrush(Colors.Blue), 5)
+            );
         }
 
         public void ZeichneUhr()
         {
             mNeueUhr.ZeichneKreis();
             mAnalogUhrGruppe.Children.Add(mNeueUhr.VollstaendigesZiffernblatt);
-            
         }
         public Image CreateImage()
         {
             ZeichneUhr();
             updateTime();
+
             DrawingImage drawingImage = new DrawingImage(mAnalogUhrGruppe);
             UhrImage = new Image
             {
@@ -77,6 +90,7 @@ namespace AnalogUhr_Sellen
                 Y = -drawingImage.Height / 2
             };
             UhrImage.RenderTransform = uhrMid;
+
             return UhrImage;
         }
         private void updateTime()
@@ -98,18 +112,21 @@ namespace AnalogUhr_Sellen
 
             mAnalogUhrGruppe.Children.Add(mSekunde.CreateZeiger());
             mAnalogUhrGruppe.Children.Add(mMinute.CreateZeiger());
-            mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger());
-
-            //mAnalogUhrGruppe.Children.Add(new GeometryDrawing
-            //{
-            //    Geometry = new EllipseGeometry
-            //    {
-            //        Center = mptMittelpunkt,
-            //        RadiusX = miRadius * 0.05,
-            //        RadiusY = miRadius * 0.05,
-            //    },
-            //    Brush = Brushes.Black
-            //});
+            mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger()); 
+            Point lokalMittelpunkt = new Point(miRadius, miRadius);
+            EllipseGeometry mittelpunktKreis = new EllipseGeometry
+            {
+                Center = lokalMittelpunkt,
+                RadiusX = miRadius * 0.05,
+                RadiusY = miRadius * 0.05,
+            };
+            
+            GeometryDrawing gdMittelpunkt = new GeometryDrawing
+            {
+                Geometry = mittelpunktKreis,
+                Brush = Brushes.Black
+            };
+            mAnalogUhrGruppe.Children.Add(gdMittelpunkt);
         }
     }
 }

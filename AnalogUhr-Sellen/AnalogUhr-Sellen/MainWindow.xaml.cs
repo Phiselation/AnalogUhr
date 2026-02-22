@@ -35,7 +35,6 @@ namespace AnalogUhr_Sellen
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // Optional: neu zeichnen, wenn Fenstergröße sich ändert
             ZeichneUhr();
         }
 
@@ -48,7 +47,7 @@ namespace AnalogUhr_Sellen
             double canvasWidth = UhrCanvas.ActualWidth;
             double canvasHeight = UhrCanvas.ActualHeight;
 
-            double durchmesser = Math.Min(canvasHeight, canvasWidth);
+            double durchmesser = (Math.Min(canvasHeight, canvasWidth)*0.9);
             Point mitte = new Point(canvasWidth / 2.0, canvasHeight / 2.0);
 
             NewUhr = new Uhr(mitte, (int)durchmesser);

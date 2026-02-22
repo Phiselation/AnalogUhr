@@ -26,18 +26,18 @@ namespace AnalogUhr_Sellen
         }
         public Zeiger(Point Mittelpunkt, double Radius, int Länge, Pen ZeigerPen)
             : base(Mittelpunkt, Radius)
-        {
-            mLänge = Länge;
-            mZeigerWinkel = 0;
-            mZeigerPen = ZeigerPen;
+        { 
             mptMittelpunkt = Mittelpunkt;
+            mZeigerWinkel = Radius;
+            mLänge = Länge;
+            mZeigerPen = ZeigerPen;
         }
         public DrawingGroup CreateZeiger()
         {
             UhrZeiger = new LineGeometry
             {
                 StartPoint = mptMittelpunkt,
-                EndPoint = new Point(mptMittelpunkt.X, mptMittelpunkt.Y - (Radius * mLänge / 100))
+                EndPoint = new Point(mptMittelpunkt.X, mptMittelpunkt.Y - mLänge)
             };
             ggZeiger = new GeometryGroup();
 
@@ -65,7 +65,6 @@ namespace AnalogUhr_Sellen
         }
         public void Set(double iWinkel)
         {
-            //mZeigerWinkel = iWinkel;
             mZeigerWinkel = iWinkel;
             if (rtZeiger != null)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,23 +69,8 @@ namespace AnalogUhr_Sellen
             // Zeitstriche zeichnen
             ZeichneZeitstriche();
 
-            // Ziffern zeichnen
+            // Ziffern zeichnen (für spater)
             ZeichneZiffern();
-
-            // Mittelpunkt-Punkt
-            EllipseGeometry mittelpunktKreis = new EllipseGeometry
-            {
-                Center = mMittelpunkt,
-                RadiusX = mRadius * 0.05,
-                RadiusY = mRadius * 0.05,
-            };
-
-            ggZiffernblatt.Children.Add(mittelpunktKreis);
-            gdMittelpunkt = new GeometryDrawing
-            {
-                Geometry = mittelpunktKreis,
-                Brush = Brushes.Black
-            };
 
             if (ggZeitstriche.Children.Count > 0)
             {
@@ -102,7 +88,6 @@ namespace AnalogUhr_Sellen
             VollstaendigesZiffernblatt.Children.Clear();
             VollstaendigesZiffernblatt.Children.Add(gdZiffernblatt);
             VollstaendigesZiffernblatt.Children.Add(gdZeitstrich);
-            VollstaendigesZiffernblatt.Children.Add(gdMittelpunkt);
         }
         private void ZeichneZeitstriche()
         {
@@ -142,6 +127,7 @@ namespace AnalogUhr_Sellen
         }
         private void ZeichneZiffern()
         {
+            //Noch lehr, da noch nicht in der Basisversion verfügbar :D
         }
     }
 }

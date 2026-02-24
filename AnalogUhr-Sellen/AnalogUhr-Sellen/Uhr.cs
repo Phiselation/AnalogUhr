@@ -26,6 +26,7 @@ namespace AnalogUhr_Sellen
 
         public Uhr(Point pMitte, int durchmesser)
         {
+            UhrImage = new Image();
             mptMittelpunkt = pMitte;
             miRadius = durchmesser / 2;
             Uhrenwerte();
@@ -69,25 +70,27 @@ namespace AnalogUhr_Sellen
 
         public void ZeichneUhr()
         {
+            //mNeueUhr.ZeichneKreis();
+            //mAnalogUhrGruppe.Children.Clear();
             mAnalogUhrGruppe.Children.Add(mNeueUhr.VollstaendigesZiffernblatt);
         }
         public Image CreateImage()
         {
-            ZeichneUhr();
+            //ZeichneUhr();
             updateTime();
 
             DrawingImage drawingImage = new DrawingImage(mAnalogUhrGruppe);
-            UhrImage = new Image
-            {
-                Source = drawingImage,
-                Stretch = Stretch.None
-            };
             TranslateTransform uhrMid = new TranslateTransform
             {
                 X = -drawingImage.Width / 2,
                 Y = -drawingImage.Height / 2
             };
-            UhrImage.RenderTransform = uhrMid;
+            TransformGroup ttGroup = new TransformGroup();
+            ttGroup.Children.Add(uhrMid);
+
+            UhrImage.Source = drawingImage;
+            UhrImage.Stretch = Stretch.None;
+            UhrImage.RenderTransform = ttGroup;
 
             return UhrImage;
         }
@@ -125,6 +128,13 @@ namespace AnalogUhr_Sellen
                 Brush = Brushes.Black
             };
             mAnalogUhrGruppe.Children.Add(gdMittelpunkt);
+        }
+        public void AktualisiereImage(Point NewMid, int Durchmesser)
+        {
+            mptMittelpunkt = NewMid;
+            miRadius = Durchmesser / 2;
+            Uhrenwerte();
+            CreateImage();
         }
     }
 }

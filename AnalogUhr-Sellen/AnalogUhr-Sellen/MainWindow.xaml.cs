@@ -21,6 +21,7 @@ namespace AnalogUhr_Sellen
     public partial class MainWindow : Window
     {
         private Uhr NewUhr;
+        //private Image AnalogUhr;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +41,7 @@ namespace AnalogUhr_Sellen
 
         private void ZeichneUhr()
         {
+            //Image AnalogUhr;
             UhrCanvas.Children.Clear();
 
             UhrCanvas.Background = Brushes.LightGray;
@@ -48,16 +50,28 @@ namespace AnalogUhr_Sellen
             double canvasHeight = UhrCanvas.ActualHeight;
 
             double durchmesser = (Math.Min(canvasHeight, canvasWidth)*0.9);
-            Point mitte = new Point(canvasWidth / 2 , canvasHeight / 2);
+            Point mitte = new Point(canvasWidth / 2, canvasHeight / 2);
 
-            NewUhr = new Uhr(mitte, (int)durchmesser);
+            if (NewUhr == null)
+            {
+                NewUhr = new Uhr(mitte, (int)durchmesser);
+                NewUhr.CreateImage();
+            }
+            else
+                NewUhr.AktualisiereImage(mitte, (int)durchmesser);
 
-            Image AnalogUhr = NewUhr.CreateImage();
+            Canvas.SetLeft(NewUhr.UhrImage, mitte.X);
+            Canvas.SetTop(NewUhr.UhrImage, mitte.Y);
 
-            Canvas.SetLeft(AnalogUhr, mitte.X);
-            Canvas.SetTop(AnalogUhr, mitte.Y);
+            UhrCanvas.Children.Add(NewUhr.UhrImage);
+            //NewUhr = new Uhr(mitte, (int)durchmesser);
 
-            UhrCanvas.Children.Add(AnalogUhr);
+            //Image AnalogUhr = NewUhr.CreateImage();
+
+            //Canvas.SetLeft(AnalogUhr, mitte.X);
+            //Canvas.SetTop(AnalogUhr, mitte.Y);
+
+            //UhrCanvas.Children.Add(AnalogUhr);
         }
     }
 }

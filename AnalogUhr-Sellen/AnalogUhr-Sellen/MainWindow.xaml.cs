@@ -48,7 +48,7 @@ namespace AnalogUhr_Sellen
             double canvasHeight = UhrCanvas.ActualHeight;
 
             double durchmesser = (Math.Min(canvasHeight, canvasWidth)*0.9);
-            Point mitte = new Point(canvasWidth / 2.0, canvasHeight / 2.0);
+            Point mitte = new Point(canvasWidth / 2 , canvasHeight / 2);
 
             NewUhr = new Uhr(mitte, (int)durchmesser);
 

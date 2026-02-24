@@ -46,6 +46,7 @@ namespace AnalogUhr_Sellen
             ggZeitstriche = new GeometryGroup();
             VollstaendigesZiffernblatt = new DrawingGroup();
             mZeitstrichdicke = Zeitstriche;
+            ZeichneKreis();
         }
         public void ZeichneKreis()
         {

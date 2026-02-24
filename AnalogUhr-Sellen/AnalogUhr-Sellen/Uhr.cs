@@ -40,28 +40,27 @@ namespace AnalogUhr_Sellen
         private void Uhrenwerte()
         {
             mNeueUhr = new Ziffernblatt(
-                new Point(miRadius,miRadius),
+                mptMittelpunkt,
                 miRadius,
                 Brushes.Black,       // Kreis-Farbe
                 3,                  // Kreis-Dicke
                 Brushes.Black,       // Strich-Farbe
                 2                   // Strich-Dicke
             );
-            Point lokalMittelpunkt = new Point(miRadius, miRadius);
             mSekunde = new Zeiger(
-                lokalMittelpunkt, 
+                mptMittelpunkt, 
                 miRadius, 
                 (int)(miRadius * 0.75), 
                 new Pen(new SolidColorBrush(Colors.Black), 2)
             );
             mMinute = new Zeiger(
-                lokalMittelpunkt, 
+                mptMittelpunkt, 
                 miRadius, 
                 (int)(miRadius * 0.6), 
                 new Pen(new SolidColorBrush(Colors.Red), 4)
             );
             mStunde = new Zeiger(
-                lokalMittelpunkt, 
+                mptMittelpunkt, 
                 miRadius, 
                 (int)(miRadius * 0.5), 
                 new Pen(new SolidColorBrush(Colors.Blue), 5)
@@ -70,7 +69,6 @@ namespace AnalogUhr_Sellen
 
         public void ZeichneUhr()
         {
-            mNeueUhr.ZeichneKreis();
             mAnalogUhrGruppe.Children.Add(mNeueUhr.VollstaendigesZiffernblatt);
         }
         public Image CreateImage()
@@ -112,15 +110,15 @@ namespace AnalogUhr_Sellen
 
             mAnalogUhrGruppe.Children.Add(mSekunde.CreateZeiger());
             mAnalogUhrGruppe.Children.Add(mMinute.CreateZeiger());
-            mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger()); 
-            Point lokalMittelpunkt = new Point(miRadius, miRadius);
+            mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger());
+
             EllipseGeometry mittelpunktKreis = new EllipseGeometry
             {
-                Center = lokalMittelpunkt,
+                Center = mptMittelpunkt,
                 RadiusX = miRadius * 0.05,
                 RadiusY = miRadius * 0.05,
             };
-            
+
             GeometryDrawing gdMittelpunkt = new GeometryDrawing
             {
                 Geometry = mittelpunktKreis,

@@ -67,16 +67,8 @@ namespace AnalogUhr_Sellen
                 new Pen(new SolidColorBrush(Colors.Blue), 5)
             );
         }
-
-        public void ZeichneUhr()
-        {
-            //mNeueUhr.ZeichneKreis();
-            //mAnalogUhrGruppe.Children.Clear();
-            mAnalogUhrGruppe.Children.Add(mNeueUhr.VollstaendigesZiffernblatt);
-        }
         public Image CreateImage()
         {
-            //ZeichneUhr();
             updateTime();
 
             DrawingImage drawingImage = new DrawingImage(mAnalogUhrGruppe);
@@ -114,20 +106,7 @@ namespace AnalogUhr_Sellen
             mAnalogUhrGruppe.Children.Add(mSekunde.CreateZeiger());
             mAnalogUhrGruppe.Children.Add(mMinute.CreateZeiger());
             mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger());
-
-            EllipseGeometry mittelpunktKreis = new EllipseGeometry
-            {
-                Center = mptMittelpunkt,
-                RadiusX = miRadius * 0.05,
-                RadiusY = miRadius * 0.05,
-            };
-
-            GeometryDrawing gdMittelpunkt = new GeometryDrawing
-            {
-                Geometry = mittelpunktKreis,
-                Brush = Brushes.Black
-            };
-            mAnalogUhrGruppe.Children.Add(gdMittelpunkt);
+            mAnalogUhrGruppe.Children.Add(mNeueUhr.gdMittelpunkt);
         }
         public void AktualisiereImage(Point NewMid, int Durchmesser)
         {

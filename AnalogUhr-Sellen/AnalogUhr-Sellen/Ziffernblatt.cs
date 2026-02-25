@@ -25,7 +25,7 @@ namespace AnalogUhr_Sellen
 
         private GeometryGroup ggZiffernblatt;
         private GeometryGroup ggZeitstriche;
-        private GeometryDrawing gdMittelpunkt;
+        public GeometryDrawing gdMittelpunkt { get; private set; }
         private GeometryDrawing gdZiffernblatt;
         private GeometryDrawing gdZeitstrich;
 
@@ -44,9 +44,11 @@ namespace AnalogUhr_Sellen
             mZeitstrichfarbe = ZeitstrichFarbe;
             ggZiffernblatt = new GeometryGroup();
             ggZeitstriche = new GeometryGroup();
+            gdMittelpunkt = new GeometryDrawing();
             VollstaendigesZiffernblatt = new DrawingGroup();
             mZeitstrichdicke = Zeitstriche;
             ZeichneKreis();
+            ZeichneMittelpunkt();
         }
         public void ZeichneKreis()
         {
@@ -72,19 +74,6 @@ namespace AnalogUhr_Sellen
 
             // Ziffern zeichnen (für spater)
             ZeichneZiffern();
-
-            if (ggZeitstriche.Children.Count > 0)
-            {
-                gdZeitstrich = new GeometryDrawing
-                {
-                    Geometry = ggZeitstriche,
-                    Brush = mZeitstrichfarbe
-                };
-            }
-            else
-            {
-                gdZeitstrich = null;
-            }
 
             VollstaendigesZiffernblatt.Children.Clear();
             VollstaendigesZiffernblatt.Children.Add(gdZiffernblatt);
@@ -124,7 +113,25 @@ namespace AnalogUhr_Sellen
                 mZeitstrich.Transform = transforms;
 
                 ggZeitstriche.Children.Add(mZeitstrich);
+
+                gdZeitstrich = new GeometryDrawing
+                {
+                    Geometry = ggZeitstriche,
+                    Brush = mZeitstrichfarbe
+                };
             }
+        }
+        private void ZeichneMittelpunkt()
+        {
+            EllipseGeometry mittelpunktKreis = new EllipseGeometry
+            {
+                Center = mMittelpunkt,
+                RadiusX = mRadius * 0.05,
+                RadiusY = mRadius * 0.05,
+            };
+
+            gdMittelpunkt.Geometry = mittelpunktKreis;
+            gdMittelpunkt.Brush = Brushes.Black;
         }
         private void ZeichneZiffern()
         {

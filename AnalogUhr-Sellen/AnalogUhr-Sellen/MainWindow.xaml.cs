@@ -21,7 +21,6 @@ namespace AnalogUhr_Sellen
     public partial class MainWindow : Window
     {
         private Uhr NewUhr;
-        //private Image AnalogUhr;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,7 +40,6 @@ namespace AnalogUhr_Sellen
 
         private void ZeichneUhr()
         {
-            //Image AnalogUhr;
             UhrCanvas.Children.Clear();
 
             UhrCanvas.Background = Brushes.LightGray;
@@ -64,14 +62,6 @@ namespace AnalogUhr_Sellen
             Canvas.SetTop(NewUhr.UhrImage, mitte.Y);
 
             UhrCanvas.Children.Add(NewUhr.UhrImage);
-            //NewUhr = new Uhr(mitte, (int)durchmesser);
-
-            //Image AnalogUhr = NewUhr.CreateImage();
-
-            //Canvas.SetLeft(AnalogUhr, mitte.X);
-            //Canvas.SetTop(AnalogUhr, mitte.Y);
-
-            //UhrCanvas.Children.Add(AnalogUhr);
         }
     }
 }

@@ -14,9 +14,11 @@ namespace AnalogUhr_Sellen
     class Uhr
     {
         private Ziffernblatt mNeueUhr;
+
         private Zeiger mSekunde;
         private Zeiger mMinute;
         private Zeiger mStunde;
+
         private Point mptMittelpunkt;
         private int miRadius;
         private DispatcherTimer mTimer;
@@ -43,10 +45,11 @@ namespace AnalogUhr_Sellen
             mNeueUhr = new Ziffernblatt(
                 mptMittelpunkt,
                 miRadius,
-                Brushes.Black,       // Kreis-Farbe
-                3,                  // Kreis-Dicke
-                Brushes.Black,       // Strich-Farbe
-                2                   // Strich-Dicke
+                Brushes.Black,          // Kreis-Farbe
+                3,                      // Kreis-Dicke
+                Brushes.Black,          // Strich-Farbe
+                2,                      // Strich-Dicke
+                Brushes.Black          // Ziffern-Farbe
             );
             mSekunde = new Zeiger(
                 mptMittelpunkt, 

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Globalization;
 
 namespace AnalogUhr_Sellen
 {
@@ -17,23 +18,31 @@ namespace AnalogUhr_Sellen
         private RectangleGeometry mZeitstrich;
         private EllipseGeometry ZiffernblattDrawing;
         private Point mMittelpunkt;
+
         private int mRadius;
-        private Brush mKreisfarbe;
-        private int mKreisdicke;
-        private Brush mZeitstrichfarbe;
+        private int mKreisdicke; 
         private int mZeitstrichdicke;
+
+        private Brush mZeitstrichfarbe;
+        private Brush mKreisfarbe;
+        private Brush mZiffernfarbe;
 
         private GeometryGroup ggZiffernblatt;
         private GeometryGroup ggZeitstriche;
-        public GeometryDrawing gdMittelpunkt { get; private set; }
+        private GeometryGroup ggZiffern;
+        
         private GeometryDrawing gdZiffernblatt;
         private GeometryDrawing gdZeitstrich;
+        private GeometryDrawing gdZiffer;
+
+        public GeometryDrawing gdMittelpunkt { get; private set; }
 
         public DrawingGroup VollstaendigesZiffernblatt { get; private set; }
 
         public Ziffernblatt(Point Mittelpunkt, int Radius,
                             Brush Kreisfarbe, int Kreisdicke,
-                            Brush ZeitstrichFarbe, int Zeitstriche)
+                            Brush ZeitstrichFarbe, int Zeitstrichdicke,
+                            Brush Ziffernfarbe)
             : base(Mittelpunkt, Radius)
         {
             mMittelpunkt = Mittelpunkt;
@@ -42,11 +51,19 @@ namespace AnalogUhr_Sellen
             mRadius = Radius;
             mPen = new Pen(mKreisfarbe, mKreisdicke);
             mZeitstrichfarbe = ZeitstrichFarbe;
+            mZiffernfarbe = Ziffernfarbe;
+            mZeitstrichdicke = Zeitstrichdicke;
+
             ggZiffernblatt = new GeometryGroup();
             ggZeitstriche = new GeometryGroup();
+            ggZiffernblatt = new GeometryGroup();
+            ggZiffern = new GeometryGroup();
+
             gdMittelpunkt = new GeometryDrawing();
+
             VollstaendigesZiffernblatt = new DrawingGroup();
-            mZeitstrichdicke = Zeitstriche;
+
+            
             ZeichneKreis();
             ZeichneMittelpunkt();
         }
@@ -72,12 +89,13 @@ namespace AnalogUhr_Sellen
             // Zeitstriche zeichnen
             ZeichneZeitstriche();
 
-            // Ziffern zeichnen (für spater)
+            // Ziffern zeichnen
             ZeichneZiffern();
 
             VollstaendigesZiffernblatt.Children.Clear();
             VollstaendigesZiffernblatt.Children.Add(gdZiffernblatt);
             VollstaendigesZiffernblatt.Children.Add(gdZeitstrich);
+            VollstaendigesZiffernblatt.Children.Add(gdZiffer);
         }
         private void ZeichneZeitstriche()
         {
@@ -135,7 +153,39 @@ namespace AnalogUhr_Sellen
         }
         private void ZeichneZiffern()
         {
-            //Noch lehr, da noch nicht in der Basisversion verfügbar :D
+            for (int i = 1; i <= 12; i++)
+            {
+                int angle = i * 30 + 180;
+                FormattedText text = new FormattedText(
+                    i.ToString(),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Times New Roman"),
+                    mRadius * 0.1,
+                    mZiffernfarbe,
+                    VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip);
+
+                Geometry textGeometry = text.BuildGeometry(
+                    new Point(
+                        mMittelpunkt.X - text.Width /2,
+                        mMittelpunkt.Y));
+
+                TransformGroup transformoperations = new TransformGroup();
+                transformoperations.Children.Add(new RotateTransform(-angle, mRadius, mRadius));
+                transformoperations.Children.Add(new RotateTransform(angle, mRadius, mRadius * 0.3));
+                transformoperations.Children.Add(new TranslateTransform(0, mRadius * 0.65));
+                //Transformationsreihenfolge: try & error, bis die Ziffern an der richtigen Stelle sind; mit Jakob getüftelt
+
+                textGeometry.Transform = transformoperations;
+
+                ggZiffern.Children.Add(textGeometry);
+
+                gdZiffer = new GeometryDrawing
+                {
+                    Geometry = ggZiffern,
+                    Brush = mZiffernfarbe
+                };
+            }
         }
     }
 }

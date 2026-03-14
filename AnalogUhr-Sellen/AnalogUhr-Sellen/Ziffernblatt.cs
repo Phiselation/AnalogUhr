@@ -18,6 +18,7 @@ namespace AnalogUhr_Sellen
         private RectangleGeometry mZeitstrich;
         private EllipseGeometry ZiffernblattDrawing;
         private Point mMittelpunkt;
+        private string mFont = "Times New Roman";
 
         private int mRadius;
         private int mKreisdicke; 
@@ -42,7 +43,7 @@ namespace AnalogUhr_Sellen
         public Ziffernblatt(Point Mittelpunkt, int Radius,
                             Brush Kreisfarbe, int Kreisdicke,
                             Brush ZeitstrichFarbe, int Zeitstrichdicke,
-                            Brush Ziffernfarbe)
+                            Brush Ziffernfarbe, string font)
             : base(Mittelpunkt, Radius)
         {
             mMittelpunkt = Mittelpunkt;
@@ -53,6 +54,7 @@ namespace AnalogUhr_Sellen
             mZeitstrichfarbe = ZeitstrichFarbe;
             mZiffernfarbe = Ziffernfarbe;
             mZeitstrichdicke = Zeitstrichdicke;
+            mFont = font;
 
             ggZiffernblatt = new GeometryGroup();
             ggZeitstriche = new GeometryGroup();
@@ -106,17 +108,17 @@ namespace AnalogUhr_Sellen
                 double laenge;
                 double dicke;
 
-                if (i % 15 == 0) // Stunden-Marken (jede Viertelstunde)
+                if (i % 15 == 0)
                 {
                     laenge = mRadius * 0.15;
                     dicke = mZeitstrichdicke * 2;
                 }
-                else if (i % 5 == 0) // 5-Minuten-Marken
+                else if (i % 5 == 0)
                 {
                     laenge = mRadius * 0.1;
                     dicke = mZeitstrichdicke * 1.5;
                 }
-                else // Minuten-Marken
+                else
                 {
                     laenge = mRadius * 0.05;
                     dicke = mZeitstrichdicke;
@@ -160,8 +162,8 @@ namespace AnalogUhr_Sellen
                     i.ToString(),
                     CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight,
-                    new Typeface("Times New Roman"),
-                    mRadius * 0.1,
+                    new Typeface(mFont),
+                    Radius * 0.1 + 1,
                     mZiffernfarbe,
                     VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip);
 

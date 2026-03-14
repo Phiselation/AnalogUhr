@@ -13,6 +13,7 @@ namespace AnalogUhr_Sellen
 {
     class Uhr
     {
+        private Ton mTickTon;
         private Ziffernblatt mNeueUhr;
 
         private Zeiger mSekunde;
@@ -22,15 +23,21 @@ namespace AnalogUhr_Sellen
         private Point mptMittelpunkt;
         private int miRadius;
         private DispatcherTimer mTimer;
+        private string mTonName;
+        private string mFont;
+        private int mPlayTime;
 
         private DrawingGroup mAnalogUhrGruppe = new DrawingGroup();
         public Image UhrImage { get; private set; }
 
-        public Uhr(Point pMitte, int durchmesser)
+        public Uhr(Point pMitte, int durchmesser, string Ton, string Font, int PlayTime)
         {
             UhrImage = new Image();
             mptMittelpunkt = pMitte;
             miRadius = durchmesser / 2;
+            mTonName = Ton;
+            mFont = Font;
+            mPlayTime = PlayTime;
             Uhrenwerte();
             Dispatcher uiDispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
             mTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, new EventHandler(mTimer_Tick), uiDispatcher);
@@ -49,7 +56,8 @@ namespace AnalogUhr_Sellen
                 3,                      // Kreis-Dicke
                 Brushes.Black,          // Strich-Farbe
                 2,                      // Strich-Dicke
-                Brushes.Black          // Ziffern-Farbe
+                Brushes.Black,          // Ziffern-Farbe
+                mFont
             );
             mSekunde = new Zeiger(
                 mptMittelpunkt, 
@@ -80,17 +88,17 @@ namespace AnalogUhr_Sellen
                 X = -drawingImage.Width / 2,
                 Y = -drawingImage.Height / 2
             };
-            TransformGroup ttGroup = new TransformGroup();
-            ttGroup.Children.Add(uhrMid);
 
             UhrImage.Source = drawingImage;
             UhrImage.Stretch = Stretch.None;
-            UhrImage.RenderTransform = ttGroup;
+            UhrImage.RenderTransform = uhrMid;
 
             return UhrImage;
         }
         private void updateTime()
         {
+            PlayBehavior();
+
             double sekundenWinkel = DateTime.Now.Second + DateTime.Now.Millisecond / 1000;
             double minutenWinkel = DateTime.Now.Minute + sekundenWinkel / 60;
             double stundenWinkel = (DateTime.Now.Hour % 12) + minutenWinkel / 60;
@@ -111,10 +119,41 @@ namespace AnalogUhr_Sellen
             mAnalogUhrGruppe.Children.Add(mStunde.CreateZeiger());
             mAnalogUhrGruppe.Children.Add(mNeueUhr.gdMittelpunkt);
         }
-        public void AktualisiereImage(Point NewMid, int Durchmesser)
+        private void PlayBehavior()
+        {
+            if ((DateTime.Now.Minute == 0) && (DateTime.Now.Second == 0) && (mPlayTime == 2))
+            {
+                PlayOptions();
+            }
+            else if ((DateTime.Now.Second == 0) && (mPlayTime == 1))
+            {
+                PlayOptions();
+            }
+        }
+        private void PlayOptions()
+        {
+            switch (mTonName)
+            {
+                case "ACDC":
+                    mTickTon = new Ton("ACDC");
+                    break;
+                case "Kirche":
+                    mTickTon = new Ton("Kirche");
+                    break;
+                case "Fahrrad":
+                    mTickTon = new Ton("Fahrrad");
+                    break;
+                default:
+                    mTickTon = new Ton("kein Ton");
+                    break;
+            }
+        }
+        public void AktualisiereImage(Point NewMid, int Durchmesser, string Uhrenton, string Font)
         {
             mptMittelpunkt = NewMid;
             miRadius = Durchmesser / 2;
+            mTonName = Uhrenton;
+            mFont = Font;
             Uhrenwerte();
             CreateImage();
         }

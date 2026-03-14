@@ -68,7 +68,7 @@ namespace AnalogUhr_Sellen
             mZeigerWinkel = iWinkel;
             if (rtZeiger != null)
             {
-                rtZeiger.Angle = mZeigerWinkel; // transform sofort aktualisieren, wenn vorhanden
+                rtZeiger.Angle = mZeigerWinkel;
             }
         }
     }

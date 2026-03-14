@@ -21,6 +21,11 @@ namespace AnalogUhr_Sellen
     public partial class MainWindow : Window
     {
         private Uhr NewUhr;
+
+        private string Uhrenton;
+        private string Font = "Times New Roman";
+        private int PlayTime = 1;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -47,21 +52,81 @@ namespace AnalogUhr_Sellen
             double canvasWidth = UhrCanvas.ActualWidth;
             double canvasHeight = UhrCanvas.ActualHeight;
 
-            double durchmesser = (Math.Min(canvasHeight, canvasWidth)*0.9);
+            double durchmesser = (Math.Min(canvasHeight, canvasWidth) * 0.9);
             Point mitte = new Point(canvasWidth / 2, canvasHeight / 2);
 
             if (NewUhr == null)
             {
-                NewUhr = new Uhr(mitte, (int)durchmesser);
+                NewUhr = new Uhr(mitte, (int)durchmesser, Uhrenton, Font, PlayTime);
                 NewUhr.CreateImage();
             }
             else
-                NewUhr.AktualisiereImage(mitte, (int)durchmesser);
+                NewUhr.AktualisiereImage(mitte, (int)durchmesser, Uhrenton, Font);
 
             Canvas.SetLeft(NewUhr.UhrImage, mitte.X);
             Canvas.SetTop(NewUhr.UhrImage, mitte.Y);
 
             UhrCanvas.Children.Add(NewUhr.UhrImage);
+        }
+
+        private void Sounds_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Sounds.SelectedItem is ComboBoxItem selectedItem) //Macht aus dem ausgewählten Item ein ComboBoxItem, damit man darauf zugreifen kann
+            {
+                string ausgewaehleterTon = selectedItem.Content.ToString(); //Holt den Text des ausgewählten Items
+
+                switch (ausgewaehleterTon)
+                {
+                    case "AC/DC":
+                        Uhrenton = "ACDC";
+                        break;
+                    case "Fahrrad":
+                        Uhrenton = "Fahrrad";
+                        break;
+                    case "Kirche":
+                        Uhrenton = "Kirche";
+                        break;
+                    case "Kein Ton":
+                        Uhrenton = "kein Ton";
+                        break;
+                }
+            }
+            ZeichneUhr();
+        }
+
+        private void Fonts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Fonts.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string ausgewaehlteSchriftart = selectedItem.Content.ToString();
+
+                switch (ausgewaehlteSchriftart)
+                {
+                    case "Arial":
+                        Font = "Arial";
+                        break;
+                    case "Times New Roman":
+                        Font = "Times New Roman";
+                        break;
+                    case "Comic Sans MS":
+                        Font = "Comic Sans MS";
+                        break;
+                    case "Courier New":
+                        Font = "Courier New";
+                        break;
+                }
+            }
+            ZeichneUhr();
+        }
+
+        private void Minute_Checked(object sender, RoutedEventArgs e)
+        {
+            PlayTime = 1;
+        }
+
+        private void Stunde_Checked(object sender, RoutedEventArgs e)
+        {
+            PlayTime = 2;
         }
     }
 }

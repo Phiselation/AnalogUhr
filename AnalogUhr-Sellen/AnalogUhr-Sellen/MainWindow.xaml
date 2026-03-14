@@ -6,5 +6,35 @@
         xmlns:local="clr-namespace:AnalogUhr_Sellen"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Canvas x:Name="UhrCanvas"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!--Zwei Spalten, eine für Uhr eine für Settings-->
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <Canvas x:Name="UhrCanvas">
+        </Canvas>
+        <Border Grid.Column="1" Background="#2C3E50" Padding="10">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Einstellungen" FontFamily="Arial Black" FontSize="24" TextAlignment="Center" Foreground="White" Margin="0,0,0,20"/>
+                <TextBlock Text="Ton:" Foreground="White" Margin="0,0,0,10" TextAlignment="Center" FontSize="18"/>
+                <ComboBox x:Name="Sounds" Width="188" Height="23" SelectionChanged="Sounds_SelectionChanged">
+                    <ComboBoxItem Content="AC/DC"/>
+                    <ComboBoxItem Content="Fahrrad"/>
+                    <ComboBoxItem Content="Kirche"/>
+                    <ComboBoxItem Content="Kein Ton" IsSelected="True"/>
+                </ComboBox>
+                <TextBlock Text="bei" Foreground="White" Margin="0,5,0,10" TextAlignment="Center" FontSize="18"/>
+                <RadioButton x:Name="Minute" Content="voller Minute" FontSize="16" Foreground="White" Width="150" Checked="Minute_Checked" IsChecked="True" />
+                <RadioButton x:Name="Stunde" Content="nur voller Stunde" FontSize="16" Foreground="White" Margin="0,5,0,10" Width="150" Checked="Stunde_Checked"/>
+                <TextBlock Text="Ziffernschriftart:" Foreground="White" Margin="0,5,0,10" TextAlignment="Center" FontSize="18"/>
+                <ComboBox x:Name="Fonts" Width="188" Height="23" SelectionChanged="Fonts_SelectionChanged">
+                    <ComboBoxItem Content="Arial" FontFamily="Arial"/>
+                    <ComboBoxItem Content="Times New Roman" IsSelected="True" FontFamily="Times New Roman"/>
+                    <ComboBoxItem Content="Comic Sans MS" FontFamily="Comic Sans MS"/>
+                    <ComboBoxItem Content="Courier New" FontFamily="Courier New"/>
+                </ComboBox>
+            </StackPanel>
+        </Border>
+    </Grid>
 </Window>

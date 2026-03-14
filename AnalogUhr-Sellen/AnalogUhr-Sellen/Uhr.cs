@@ -39,8 +39,8 @@ namespace AnalogUhr_Sellen
             mFont = Font;
             mPlayTime = PlayTime;
             Uhrenwerte();
-            Dispatcher uiDispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
-            mTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, new EventHandler(mTimer_Tick), uiDispatcher);
+            Dispatcher uiDispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;                                              //An Jakobs Code inspiriert
+            mTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, new EventHandler(mTimer_Tick), uiDispatcher);   //Ebenfalls von Jakobs Code inspiriert
             mTimer.Start();
         }
         private void mTimer_Tick(object sender, EventArgs e)
